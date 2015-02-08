@@ -1,11 +1,7 @@
-# Observer
-publish/subscribe implementation
-
-
 Observer
 ===
  
- A Pub/Sub system
+ A Pub/Sub implementation
 
 Usage 
   ``` 
