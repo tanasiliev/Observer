@@ -8,7 +8,7 @@ Observer
  A Pub/Sub system
 
 Usage 
-  ``` <script>
+  ``` 
         var observer = Observer.create();
         var f = observer.subscribe(function(num){ console.log(num)});
         var s = observer.subscribe(function(num, str){ console.log(num, str)});
@@ -18,9 +18,7 @@ Usage
         observer.publish(25, "foo bar", { key : 2})
         observer.detachAll();
         observer.publish(25, "foo bar ", { key : 2})
-     </script>
   ```
-  
   in console
   ```
    25
@@ -29,5 +27,3 @@ Usage
    
    25
    25 "foo bar"
-   
-  
