@@ -19,7 +19,7 @@ Usage
         observer.detachAll();
         observer.publish(25, "foo bar ", { key : 2})
   ```
-  in console
+  ... in console
   ```
    25
    25 "foo bar"
