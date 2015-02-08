@@ -21,39 +21,46 @@
     var Event = function(){
         var _guid = GUID();
         topics[_guid] = [];
-        this.subscribers = function(){
-           return topics[_guid];
-        }
         this.guid = function(){
            return _guid;
         }
     };
     
+    var subscribers = function(){
+        return topics[this.guid()];
+    };
+    
     Event.prototype = {
         subscribe : function(handler){
-            if(!isFunction(handler)){
+            if(!isFunction(handler))
                 return error("Invalid Function " + handler); 
-            }
-            var length = this.subscribers().push(handler);
+            var length = subscribers.call(this).push(handler);
             return this.guid() + (length - 1);
         },
         publish: function(){
-            var subscribers = this.subscribers();
-            for(var i in subscribers)
-                subscribers[i] && subscribers[i].apply(null, arguments);
+            var subs = subscribers.call(this);
+            for(var i in subs)
+                subs[i] && subs[i].apply(null, arguments);
         },
-        detach: function(identifier){
-            if (typeof identifier !== 'string'){
-                return error("Invalid Identifier " + identifier); 
-            }
-            var index = identifier.slice(36);
-            if(index && index !== - 1) {
-                delete this.subscribers()[index];
-                return true;
-            }
+        detach: function(argment){
+           var subs = subscribers.call(this);    
+		   if (typeof argment == 'string'){
+		        var index = argment.slice(36);
+				if(index && index !== - 1) 
+					delete subs[index];
+           } else if(isFunction(argment)){
+			   for(var i in subs) 
+				   if(subs[i] == argment) 
+                       delete subs[i];
+           }
+           else return error("Invalid Function or Identifier " + argment);   
         },
         detachAll: function(){
           topics[this.guid()] = [];
+        },
+        destroy: function(){
+          topics[this.guid()] = null;
+          delete topics[this.guid()];
         }
     };
     var Observer = {
