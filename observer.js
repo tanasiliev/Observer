@@ -1,6 +1,6 @@
 (function (){
-   
-    var _events = {};
+
+    var topics = {}; 
     
     var isFunction = function(obj) {
       return !!(obj && obj.constructor && obj.call);
@@ -20,9 +20,9 @@
     
     var Event = function(){
         var _guid = GUID();
-        _events[_guid] = [];
+        topics[_guid] = [];
         this.subscribers = function(){
-           return _events[_guid];
+           return topics[_guid];
         }
         this.guid = function(){
            return _guid;
@@ -53,7 +53,7 @@
             }
         },
         detachAll: function(){
-          _events[this.guid()] = [];
+          topics[this.guid()] = [];
         }
     };
     var Observer = {
@@ -65,4 +65,5 @@
     if(!window.Observer){
        window.Observer = Observer;
     }
+    
 })();
