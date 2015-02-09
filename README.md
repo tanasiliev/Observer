@@ -5,7 +5,7 @@ Observer
 
 Usage 
   ``` 
-        var observer = Observer.create();
+        var observer = observer.create();
         var f = observer.subscribe(function(num){ console.log(num)});
         var s = observer.subscribe(function(num, str){ console.log(num, str)});
         var th = observer.subscribe(function(num, str,data){ console.log(num, str,data)});
