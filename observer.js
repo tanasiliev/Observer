@@ -1,4 +1,4 @@
-(function (){
+(function (global){
 
     var topics = {}; 
     
@@ -63,14 +63,19 @@
           delete topics[this.guid()];
         }
     };
-    var Observer = {
+    var observer = {
          create : function(){
             return new Event();
          }
     };
-    
-    if(!window.Observer){
-       window.Observer = Observer;
+
+    if(typeof define === 'function' && define.amd){ 
+        define(function () { return observer; });
+    } else if (typeof module !== 'undefined' && module.exports){ 
+        module.exports = observer;
+    } else { 
+        global['observer'] = observer;
     }
     
-})();
+})(this);
+
