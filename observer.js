@@ -44,8 +44,8 @@
         detach: function(handler){
            if(isFunction(handler)){
                var subs = subscribers.call(this);
-			   for(var i in subs) 
-				   if(subs[i] == handler) 
+	       for(var i in subs) 
+		   if(subs[i] == handler) 
                        delete subs[i];
            }
            else return error("Invalid Function " + handler);   
