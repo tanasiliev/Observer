@@ -44,18 +44,21 @@
         detach: function(handler){
            if(isFunction(handler)){
                var subs = subscribers.call(this);
-	       for(var i in subs) 
-		   if(subs[i] == handler) 
-                       delete subs[i];
+               for(var i in subs) 
+                   if(subs[i] == handler) 
+                       subs.splice(i, 1);
            }
            else return error("Invalid Function " + handler);   
         },
+        listeners : function(){
+            return subscribers.call(this).slice();
+        },
         detachAll: function(){
-          topics[this.guid()] = [];
+            topics[this.guid()] = [];
         },
         destroy: function(){
-          topics[this.guid()] = null;
-          delete topics[this.guid()];
+            topics[this.guid()] = null;
+            delete topics[this.guid()];
         }
     };
     var observer = {
@@ -74,3 +77,4 @@
     }
     
 })(this);
+
