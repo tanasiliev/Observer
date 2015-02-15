@@ -34,26 +34,21 @@
         subscribe : function(handler){
             if(!isFunction(handler))
                 return error("Invalid Function " + handler); 
-            var length = subscribers.call(this).push(handler);
-            return this.guid() + (length - 1);
+            subscribers.call(this).push(handler);
         },
         publish: function(){
             var subs = subscribers.call(this);
             for(var i in subs)
                 subs[i] && subs[i].apply(null, arguments);
         },
-        detach: function(argment){
-           var subs = subscribers.call(this);    
-		   if (typeof argment == 'string'){
-		        var index = argment.slice(36);
-				if(index && index !== - 1) 
-					delete subs[index];
-           } else if(isFunction(argment)){
+        detach: function(handler){
+           if(isFunction(handler)){
+               var subs = subscribers.call(this);
 			   for(var i in subs) 
-				   if(subs[i] == argment) 
+				   if(subs[i] == handler) 
                        delete subs[i];
            }
-           else return error("Invalid Function or Identifier " + argment);   
+           else return error("Invalid Function " + handler);   
         },
         detachAll: function(){
           topics[this.guid()] = [];
@@ -69,6 +64,7 @@
          }
     };
 
+    //exports to multiple environments
     if(typeof define === 'function' && define.amd){ 
         define(function () { return observer; });
     } else if (typeof module !== 'undefined' && module.exports){ 
