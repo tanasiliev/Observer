@@ -1,15 +1,9 @@
 (function (global){
 
-    var topics = {}; 
-    
     var isFunction = function(obj) {
       return !!(obj && obj.constructor && obj.call);
     };
-    
-    var error = function(message){
-        throw new Error(message)
-    };
-    
+
     var GUID = function (){
         var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
              var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -18,52 +12,49 @@
         return guid;
     };
     
-    var Event = function(){
-        var _guid = GUID();
-        topics[_guid] = [];
-        this.guid = function(){
-           return _guid;
-        }
+    var Signal = function(){
+        this.id = GUID();
+        this.subscribers = [];
     };
     
-    var subscribers = function(){
-        return topics[this.guid()];
-    };
-    
-    Event.prototype = {
+    Signal.prototype = {
         subscribe : function(handler){
             if(!isFunction(handler))
-                return error("Invalid Function " + handler); 
-            subscribers.call(this).push(handler);
+               throw new Error("Invalid Function " + handler); 
+            this.subscribers.push(handler);
         },
         publish: function(){
-            var subs = subscribers.call(this);
-            for(var i in subs)
-                subs[i] && subs[i].apply(null, arguments);
+            var subs = this.subscribers;
+            for(var i = 0; i < subs.length; ++i)
+                subs[i].apply(null, arguments);
         },
         detach: function(handler){
-           if(isFunction(handler)){
-               var subs = subscribers.call(this);
-               for(var i in subs) 
-                   if(subs[i] == handler) 
-                       subs.splice(i, 1);
-           }
-           else return error("Invalid Function " + handler);   
-        },
-        listeners : function(){
-            return subscribers.call(this).slice();
+            if(!isFunction(handler))
+                throw new Error("Invalid Function " + handler);
+            var subs = this.subscribers;
+            for(var i = 0; i < subs.length; ++i){    
+                if(subs[i] == handler){ 
+                    subs.splice(i, 1);
+                    break;  
+              }
+           }    
         },
         detachAll: function(){
-            topics[this.guid()] = [];
+            this.subscribers = [];
         },
-        destroy: function(){
-            topics[this.guid()] = null;
-            delete topics[this.guid()];
+        listeners : function(){
+            return this.subscribers.slice(0);
         }
     };
+    
     var observer = {
          create : function(){
-            return new Event();
+            var signal = new Signal(),
+                obj = {};
+            for(var prop in Signal.prototype){
+              obj[prop] = signal[prop].bind(signal);
+            } 
+            return obj;
          }
     };
 
@@ -77,4 +68,3 @@
     }
     
 })(this);
-
