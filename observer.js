@@ -4,16 +4,7 @@
       return !!(obj && obj.constructor && obj.call);
     };
 
-    var GUID = function (){
-        var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-             return v.toString(16).toUpperCase();
-        });
-        return guid;
-    };
-    
     var Signal = function(){
-        this.id = GUID();
         this.subscribers = [];
     };
     
@@ -48,14 +39,14 @@
     };
     
     var observer = {
-         create : function(){
+        create : function(){
             var signal = new Signal(),
                 obj = {};
             for(var prop in Signal.prototype){
-              obj[prop] = signal[prop].bind(signal);
+                obj[prop] = signal[prop].bind(signal);
             } 
             return obj;
-         }
+        }
     };
 
     //exports to multiple environments
