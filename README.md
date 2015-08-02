@@ -1,7 +1,7 @@
 Observer
 ===
  
- A Pub/Sub implementation
+ A publish/subscribe implementation
 
 Usage 
   ``` 
